@@ -17,6 +17,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ✅ Add this
+app.get("/", (req, res) => {
+  res.send("API is running 🚀");
+});
+
 app.use("/api/auth", authRoutes);
 app.use("/api/groceries", groceryRoutes);
 app.use("/api/cart", cartRoutes);
