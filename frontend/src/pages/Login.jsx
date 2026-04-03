@@ -23,7 +23,7 @@ function Login() {
 
       const { data } = await axios.post(
         "http://localhost:5000/api/auth/login",
-        form
+        form,
       );
 
       // ✅ Save user
