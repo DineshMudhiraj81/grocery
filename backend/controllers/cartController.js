@@ -1,4 +1,4 @@
-import Cart from "../models/cartModel.js";
+import Cart from "../models/CartModel.js";
 
 /* =============================
    ADD TO CART
