@@ -30,7 +30,7 @@ function App() {
 
       try {
         const { data } = await axios.get(
-          "http://localhost:5000/api/cart",
+          `${import.meta.env.VITE_API_URL}/api/auth/cart`,
           {
             headers: {
               Authorization: `Bearer ${userInfo.token}`,

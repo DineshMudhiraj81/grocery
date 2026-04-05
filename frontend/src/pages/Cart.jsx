@@ -18,7 +18,7 @@ function Cart() {
 
       try {
         const { data } = await axios.get(
-          "http://localhost:5000/api/cart",
+          `${import.meta.env.VITE_API_URL}/api/auth/cart`,
           {
             headers: {
               Authorization: `Bearer ${userInfo.token}`,
@@ -41,7 +41,7 @@ function Cart() {
 
     try {
       const { data } = await axios.put(
-        "http://localhost:5000/api/cart",
+        `${import.meta.env.VITE_API_URL}/api/auth/cart`,
         { productId, quantity },
         {
           headers: {
@@ -60,7 +60,7 @@ function Cart() {
   const removeItem = async (productId) => {
     try {
       const { data } = await axios.delete(
-        `http://localhost:5000/api/cart/${productId}`,
+        `${import.meta.env.VITE_API_URL}/api/auth/cart/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${userInfo.token}`,
@@ -78,7 +78,7 @@ function Cart() {
   // 🔥 Clear Cart
   const clearCart = async () => {
     try {
-      await axios.delete("http://localhost:5000/api/cart", {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/auth/cart`, {
         headers: {
           Authorization: `Bearer ${userInfo.token}`,
         },
@@ -144,7 +144,7 @@ function Cart() {
               >
                 <div className="flex items-center gap-4">
                   <img
-                    src={`http://localhost:5000/uploads/${item.image}`}
+                    src={`${import.meta.env.VITE_API_URL}/uploads/${item.image}`}
                     alt={item.name}
                     className="w-20 h-20 object-cover rounded"
                   />

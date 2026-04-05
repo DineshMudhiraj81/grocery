@@ -21,7 +21,7 @@ function Home() {
 
       try {
         const { data } = await axios.get(
-          "http://localhost:5000/api/groceries",
+          `${import.meta.env.VITE_API_URL}/api/auth/groceries`,
           {
             headers: {
               Authorization: `Bearer ${userInfo.token}`,
@@ -60,7 +60,7 @@ function Home() {
       }
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/cart",
+        `${import.meta.env.VITE_API_URL}/api/cart`,
         {
           productId: item._id,
           name: item.name,
@@ -121,7 +121,7 @@ function Home() {
             >
               {/* Image */}
               <img
-                src={`http://localhost:5000/uploads/${item.image}`}
+                src={`${import.meta.env.VITE_API_URL}/uploads/${item.image}`}
                 alt={item.name}
                 className="w-full h-40 object-cover"
               />

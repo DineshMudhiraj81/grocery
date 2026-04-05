@@ -14,7 +14,13 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: [
+    "https://grocery-rho-ten.vercel.app",
+    "https://grocery-6eobvts7z-dineshmudhiraj81s-projects.vercel.app"
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // ✅ Add this

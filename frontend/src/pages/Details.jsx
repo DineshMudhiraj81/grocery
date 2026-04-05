@@ -19,7 +19,8 @@ function Details() {
       if (!userInfo) return;
 
       const { data } = await axios.get(
-        `http://localhost:5000/api/groceries/${id}`,
+        
+        `${import.meta.env.VITE_API_URL}/api/auth/groceries/${id}`,
         {
           headers: {
             Authorization: `Bearer ${userInfo.token}`,
@@ -30,7 +31,7 @@ function Details() {
       setItem(data);
 
       const all = await axios.get(
-        "http://localhost:5000/api/groceries",
+        `${import.meta.env.VITE_API_URL}/api/auth/groceries`,
         {
           headers: {
             Authorization: `Bearer ${userInfo.token}`,
@@ -59,7 +60,7 @@ function Details() {
       }
 
       const { data } = await axios.post(
-        "http://localhost:5000/api/cart",
+        `${import.meta.env.VITE_API_URL}/api/cart`,
         {
           productId: item._id,
           name: item.name,
@@ -99,7 +100,7 @@ function Details() {
         <div className="bg-white rounded-xl shadow-lg p-6 md:p-8 flex flex-col lg:flex-row gap-8">
           <div className="w-full lg:w-1/2">
             <img
-              src={`http://localhost:5000/uploads/${item.image}`}
+              src={`${import.meta.env.VITE_API_URL}/uploads/${item.image}`}
               alt={item.name}
               className="w-full h-64 md:h-96 object-cover rounded-lg"
             />
@@ -172,7 +173,7 @@ function Details() {
                 <Link key={rel._id} to={`/details/${rel._id}`}>
                   <div className="bg-white p-4 rounded-lg shadow hover:shadow-lg transition">
                     <img
-                      src={`http://localhost:5000/uploads/${rel.image}`}
+                      src={`${import.meta.env.VITE_API_URL}/uploads/${rel.image}`}
                       alt={rel.name}
                       className="h-40 w-full object-cover rounded"
                     />
