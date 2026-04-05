@@ -21,7 +21,7 @@ function Home() {
 
       try {
         const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/auth/groceries`,
+          `${import.meta.env.VITE_API_URL}/api/groceries`,
           {
             headers: {
               Authorization: `Bearer ${userInfo.token}`,
