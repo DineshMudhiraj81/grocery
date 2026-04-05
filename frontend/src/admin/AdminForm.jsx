@@ -41,7 +41,8 @@ function Admin() {
     formData.append("image", form.image);
 
     await axios.post(
-      "http://localhost:5000/api/groceries",
+      
+      `${import.meta.env.VITE_API_URL}/api/groceries`,
       formData,
       {
         headers: {

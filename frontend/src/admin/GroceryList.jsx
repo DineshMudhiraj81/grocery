@@ -18,7 +18,7 @@ function GroceryList() {
 
   const fetchGroceries = async () => {
     const { data } = await axios.get(
-      "http://localhost:5000/api/groceries",
+      `${import.meta.env.VITE_API_URL}/api/groceries`,
       config
     );
     setGroceries(data);
@@ -32,7 +32,8 @@ function GroceryList() {
     try {
       if (window.confirm("Are you sure?")) {
         await axios.delete(
-          `http://localhost:5000/api/groceries/${id}`,
+          
+          `${import.meta.env.VITE_API_URL}/api/groceries/${id}`,
           config
         );
         fetchGroceries();
@@ -57,7 +58,7 @@ function GroceryList() {
     }
 
     await axios.put(
-      `http://localhost:5000/api/groceries/${editItem._id}`,
+      `${import.meta.env.VITE_API_URL}/api/groceries/${editItem._id}`,
       formData,
       config
     );
@@ -124,7 +125,7 @@ const totalPages = Math.ceil(groceries.length / itemsPerPage);
                 <td className="p-3">
                   {item.image ? (
                     <img
-                      src={`http://localhost:5000/uploads/${item.image}`}
+                      src={`${import.meta.env.VITE_API_URL}/uploads/${item.image}`}
                       alt={item.name}
                       className="w-16 h-16 object-cover rounded"
                     />
