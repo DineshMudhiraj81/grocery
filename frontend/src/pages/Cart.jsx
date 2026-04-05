@@ -18,7 +18,7 @@ function Cart() {
 
       try {
         const { data } = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/auth/cart`,
+          `${import.meta.env.VITE_API_URL}/api/cart`,
           {
             headers: {
               Authorization: `Bearer ${userInfo.token}`,
@@ -41,7 +41,7 @@ function Cart() {
 
     try {
       const { data } = await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/auth/cart`,
+        `${import.meta.env.VITE_API_URL}/api/cart`,
         { productId, quantity },
         {
           headers: {
@@ -60,7 +60,7 @@ function Cart() {
   const removeItem = async (productId) => {
     try {
       const { data } = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/auth/cart/${productId}`,
+        `${import.meta.env.VITE_API_URL}/api/cart/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${userInfo.token}`,
@@ -78,7 +78,7 @@ function Cart() {
   // 🔥 Clear Cart
   const clearCart = async () => {
     try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/auth/cart`, {
+      await axios.delete(`${import.meta.env.VITE_API_URL}/api/cart`, {
         headers: {
           Authorization: `Bearer ${userInfo.token}`,
         },

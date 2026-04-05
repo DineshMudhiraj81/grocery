@@ -20,7 +20,7 @@ function Details() {
 
       const { data } = await axios.get(
         
-        `${import.meta.env.VITE_API_URL}/api/auth/groceries/${id}`,
+        `${import.meta.env.VITE_API_URL}/api/groceries/${id}`,
         {
           headers: {
             Authorization: `Bearer ${userInfo.token}`,
@@ -31,7 +31,7 @@ function Details() {
       setItem(data);
 
       const all = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/auth/groceries`,
+        `${import.meta.env.VITE_API_URL}/api/groceries`,
         {
           headers: {
             Authorization: `Bearer ${userInfo.token}`,
