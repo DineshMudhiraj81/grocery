@@ -49,25 +49,27 @@ const getCart = async (req, res) => {
   res.json(cart);
 };
 
+
 /* =============================
    UPDATE CART ITEM
 ============================= */
 const updateCartItem = async (req, res) => {
   const { productId, quantity } = req.body;
 
-  const cart = await Cart.findOne({ user: req.user._id });
-
-  if (!cart) return res.status(404).json({ message: "Cart not found" });
-
-  const item = cart.cartItems.find(
-    (item) => item.product.toString() === productId
+  const cart = await Cart.findOneAndUpdate(
+    {
+      user: req.user._id,
+      "cartItems.product": productId,
+    },
+    {
+      $set: { "cartItems.$.quantity": quantity },
+    },
+    { new: true }
   );
 
-  if (item) {
-    item.quantity = quantity;
+  if (!cart) {
+    return res.status(404).json({ message: "Cart not found" });
   }
-
-  await cart.save();
 
   res.json(cart);
 };

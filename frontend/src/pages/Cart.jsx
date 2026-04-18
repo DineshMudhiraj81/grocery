@@ -23,7 +23,7 @@ function Cart() {
             headers: {
               Authorization: `Bearer ${userInfo.token}`,
             },
-          }
+          },
         );
 
         dispatch(setCart(data.cartItems));
@@ -35,78 +35,101 @@ function Cart() {
     fetchCart();
   }, [dispatch]);
 
-  // 🔥 Increase / Decrease Quantity
-  const updateQuantity = async (productId, quantity) => {
-    if (quantity < 1) return;
+const updateQuantity = async (productId, quantity) => {
+  if (quantity < 1) return;
 
-    try {
-      const { data } = await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/cart`,
-        { productId, quantity },
-        {
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
+  const previousCart = [...cartItems]; // backup
 
-      dispatch(setCart(data.cartItems));
-    } catch (error) {
-      toast.error("Update failed");
-    }
-  };
+  // ✅ Optimistic UI
+  dispatch(
+    setCart(
+      cartItems.map((item) =>
+        item.product === productId
+          ? { ...item, quantity }
+          : item
+      )
+    )
+  );
 
-  // 🔥 Remove Item
-  const removeItem = async (productId) => {
-    try {
-      const { data } = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/cart/${productId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${userInfo.token}`,
-          },
-        }
-      );
-
-      dispatch(setCart(data.cartItems));
-      toast.success("Item removed");
-    } catch (error) {
-      toast.error("Remove failed");
-    }
-  };
-
-  // 🔥 Clear Cart
-  const clearCart = async () => {
-    try {
-      await axios.delete(`${import.meta.env.VITE_API_URL}/api/cart`, {
+  try {
+    await axios.put(
+      `${import.meta.env.VITE_API_URL}/api/cart`,
+      { productId, quantity },
+      {
         headers: {
           Authorization: `Bearer ${userInfo.token}`,
         },
-      });
+      }
+    );
+  } catch (error) {
+    toast.error("Update failed");
 
-      dispatch(setCart([]));
-      toast.success("Cart cleared");
-    } catch (error) {
-      toast.error("Clear failed");
-    }
-  };
+    // ✅ Rollback
+    dispatch(setCart(previousCart));
+  }
+};
+
+const removeItem = async (productId) => {
+  const previousCart = [...cartItems]; // backup
+
+  // ✅ Optimistic UI
+  dispatch(
+    setCart(cartItems.filter((item) => item.product !== productId))
+  );
+
+  try {
+    await axios.delete(
+      `${import.meta.env.VITE_API_URL}/api/cart/${productId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+    );
+
+    toast.success("Item removed");
+  } catch (error) {
+    toast.error("Remove failed");
+
+    // ✅ Rollback
+    dispatch(setCart(previousCart));
+  }
+};
+
+  // 🔥 Clear Cart
+  const clearCart = async () => {
+  const previousCart = [...cartItems]; // backup
+
+  // ✅ Optimistic UI
+  dispatch(setCart([]));
+
+  try {
+    await axios.delete(`${import.meta.env.VITE_API_URL}/api/cart`, {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    });
+
+    toast.success("Cart cleared");
+  } catch (error) {
+    toast.error("Clear failed");
+
+    // ✅ Rollback
+    dispatch(setCart(previousCart));
+  }
+};
 
   // 🔥 Total Price
   const totalPrice = cartItems.reduce(
     (acc, item) => acc + item.price * item.quantity,
-    0
+    0,
   );
 
   if (!userInfo) {
     return (
       <div className="text-center mt-20">
-        <h2 className="text-xl font-semibold">
-          Please login to view cart
-        </h2>
-        <Link
-          to="/login"
-          className="text-green-600 font-bold underline"
-        >
+        <h2 className="text-xl font-semibold">Please login to view cart</h2>
+        <Link to="/login" className="text-green-600 font-bold underline">
           Go to Login
         </Link>
       </div>
@@ -151,9 +174,7 @@ function Cart() {
 
                   <div>
                     <h3 className="font-bold">{item.name}</h3>
-                    <p className="text-gray-500">
-                      ₹{item.price}
-                    </p>
+                    <p className="text-gray-500">₹{item.price}</p>
                   </div>
                 </div>
 
@@ -168,9 +189,7 @@ function Cart() {
                     -
                   </button>
 
-                  <span className="font-semibold">
-                    {item.quantity}
-                  </span>
+                  <span className="font-semibold">{item.quantity}</span>
 
                   <button
                     onClick={() =>
@@ -200,9 +219,7 @@ function Cart() {
 
           {/* Summary */}
           <div className="mt-8 bg-white p-6 rounded-xl shadow-md">
-            <h3 className="text-xl font-bold mb-4">
-              Order Summary
-            </h3>
+            <h3 className="text-xl font-bold mb-4">Order Summary</h3>
 
             <p className="flex justify-between mb-2">
               <span>Total Items:</span>

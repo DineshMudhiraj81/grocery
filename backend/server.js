@@ -9,9 +9,11 @@ import authRoutes from "./routes/authRoutes.js";
 import groceryRoutes from "./routes/groceryRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 
+
 dotenv.config();
 connectDB();
 
+import paymentRoutes from "./routes/paymentRoutes.js";
 const app = express();
 
 app.use(cors());
@@ -25,7 +27,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/groceries", groceryRoutes);
 app.use("/api/cart", cartRoutes);
-
+app.use("/api/payment", paymentRoutes);
 app.use("/uploads", express.static("uploads"));
 
 // Error Middleware

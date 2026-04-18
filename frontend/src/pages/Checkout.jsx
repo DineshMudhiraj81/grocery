@@ -1,6 +1,8 @@
 import { useSelector } from "react-redux";
+
 import { useState } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 function Checkout() {
   const { cartItems } = useSelector((state) => state.cart);
@@ -22,20 +24,80 @@ function Checkout() {
     0
   );
 
-  const handlePlaceOrder = () => {
-    if (
-      !address.name ||
-      !address.phone ||
-      !address.city ||
-      !address.pincode ||
-      !address.addressLine
-    ) {
-      toast.error("Please fill all details");
-      return;
-    }
+  const handlePlaceOrder = async () => {
+  if (
+    !address.name ||
+    !address.phone ||
+    !address.city ||
+    !address.pincode ||
+    !address.addressLine
+  ) {
+    toast.error("Please fill all details");
+    return;
+  }
 
-    toast.success("Order placed successfully 🎉");
-  };
+  try {
+    // ✅ 1. Create order from backend
+    const { data } = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/payment/create-order`,
+      { amount: totalPrice }
+    );
+
+    // ✅ 2. Razorpay options
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY,
+      amount: data.amount,
+      currency: "INR",
+      name: "Grocery Store",
+      description: "Order Payment",
+      order_id: data.id,
+
+      // 🔥 ADD HERE 👇
+      handler: async function (response) {
+  try {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+
+    const { data } = await axios.post(
+      `${import.meta.env.VITE_API_URL}/api/payment/verify-payment`,
+      {
+        ...response,
+        cartItems,
+        address,
+        totalPrice,
+        userId: userInfo._id,
+      }
+    );
+
+    if (data.success) {
+      toast.success("Payment successful 🎉");
+
+      // ✅ clear cart
+      dispatch(clearCart());
+    } else {
+      toast.error("Payment verification failed");
+    }
+  } catch (error) {
+    toast.error("Verification error");
+  }
+},
+
+      prefill: {
+        name: address.name,
+        contact: address.phone,
+      },
+
+      theme: {
+        color: "#16a34a",
+      },
+    };
+
+    // ✅ 3. Open Razorpay
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (error) {
+    toast.error("Payment failed");
+  }
+};
 
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4">
